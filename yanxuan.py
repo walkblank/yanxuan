@@ -3,6 +3,12 @@ import requests
 from bs4 import BeautifulSoup
 import json
 
+YANXUAN_CATLIST = [
+		{''},
+		{''},
+		{''},
+]
+
 
 class YanXuanItem():
 	def __init__(self):
@@ -14,27 +20,29 @@ class YanXuanItem():
 class YanXuan:
 
 	def __init__(self):
-		self.base_url = 'http://you.163.com/item/list?'
+		self.baseUrl = 'http://you.163.com/item/list?'
 		self.payload = {}
 		self.title = ''
 		# self.search_url = 'http://you.163.com/item/list?'
 		self.soup = BeautifulSoup('', 'html.parser')
-		self.py_data = {}
-		self.result =  {}
+		self.pyData = {}
+		self.result = {}
+		self.search_CategoryList = []
+		self.search_ItemList = {}
 
 	def set_payload(self, params):
 		self.payload.update(params)
 
 	def get_pydata(self):
-		search_url = self.base_url
+		searchUrl = self.baseUrl
 		for key in self.payload:
-			search_url += (key + '='+self.payload[key]+'&')
-		print(search_url)
-		search_page = requests.get(search_url)
-		search_soup = BeautifulSoup(search_page.text, 'html.parser')
+			searchUrl += (key + '='+self.payload[key]+'&')
+		print(searchUrl)
+		searchPage = requests.get(searchUrl)
+		searchSoup = BeautifulSoup(searchPage.text, 'html.parser')
 		# print(search_soup)
-		json_data = search_soup.find_all('script')[7].text[15:-2]
-		self.py_data = json.loads(json_data)
+		jsonData = searchSoup.find_all('script')[7].text[15:-2]
+		self.pyData = json.loads(jsonData)
 		# print(self.py_data)
 
 	def get_all_category_list(self):
@@ -44,13 +52,21 @@ class YanXuan:
 		pass
 
 	def get_search_category_list(self):
-		print(self.py_data.keys())
+		print(self.pyData.keys())
 		# print(self.py_data['categoryItemList'], len(self.py_data['categoryItemList']))
-		print(self.py_data['categoryItemList'][1].keys())
-		print(self.py_data['categoryItemList'][1]['category'])
+		print(self.pyData['categoryItemList'][1].keys())
+		for cate in self.pyData['categoryItemList'] :
+			print('*==='+cate['category']['name']+'===*')
+			self.search_CategoryList.append((str(cate['category']['name']), cate['category']['id']))
+			for item in cate['itemList']:
+				print(item['name'], item['id'])
+			# print(cate['category']['name'])
+		print(self.search_CategoryList)
+		print(self.pyData['categoryItemList'][1]['category'])
 		# print(self.py_data['categoryItemList'][1]['itemList'])
-		print(self.py_data['categoryItemList'][1]['itemList'][1])
+		print(self.pyData['categoryItemList'][0]['itemList'][3])
 		pass
+
 
 	def export_resualt(self):
 		pass
