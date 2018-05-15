@@ -3,14 +3,8 @@ import requests
 from bs4 import BeautifulSoup
 import json
 
-YANXUAN_CATLIST = [
-		{''},
-		{''},
-		{''},
-]
 
-
-class YanXuanItem():
+class YanXuanItem:
 	def __init__(self):
 		self.name = ''
 		self.id = ''
@@ -27,14 +21,15 @@ class YanXuan:
 		self.soup = BeautifulSoup('', 'html.parser')
 		self.pyData = {}
 		self.result = {}
-		self.superCategory = []
+		self.superCategory = {'居家': 1005000, '配件': 1008000, '服装': 1010000, '电器': 1043000, '洗护': 1013001, '饮食': 1005002, \
+							'餐厨': 1005001, '婴童': 1011000, '文体': 1019000, '特色区': 1065000}
 		self.search_CategoryList = []
 		self.search_ItemList = []
 
 	def set_payload(self, params):
 		self.payload.update(params)
 
-	def get_pydata(self):
+	def get_CategoryPydata(self):
 		searchUrl = self.baseUrl
 		for key in self.payload:
 			searchUrl += (key + '='+self.payload[key]+'&')
@@ -43,8 +38,8 @@ class YanXuan:
 		searchSoup = BeautifulSoup(searchPage.text, 'html.parser')
 		# print(search_soup)
 		jsonData = searchSoup.find_all('script')[7].text[15:-2]
-		print(jsonData)
-		print('len = ', len(jsonData))
+		# print(jsonData)
+		# print('len = ', len(jsonData))
 		# [7].text[15:-2]
 		self.pyData = json.loads(jsonData)
 		# print(self.py_data)
@@ -59,7 +54,7 @@ class YanXuan:
 		print(self.pyData.keys())
 		# print(self.py_data['categoryItemList'], len(self.py_data['categoryItemList']))
 		print(self.pyData['categoryItemList'][1].keys())
-		for cate in self.pyData['categoryItemList'] :
+		for cate in self.pyData['categoryItemList']:
 			print('*==='+cate['category']['name']+'===*')
 			self.search_CategoryList.append((str(cate['category']['name']), cate['category']['id']))
 			for item in cate['itemList']:
@@ -77,7 +72,7 @@ class YanXuan:
 
 
 if __name__ == '__main__':
-	yanxuan = YanXuan()
-	yanxuan.set_payload({'categoryId':'1005001', 'subCategoryId':'1005007', "timer":'tc'})
-	yanxuan.get_pydata()
-	yanxuan.get_search_category_list()
+	yx = YanXuan()
+	yx.set_payload({'categoryId': '1005001', 'subCategoryId': '1005007', "timer":'tc'})
+	yx.get_CategoryPydata()
+	yx.get_search_category_list()
