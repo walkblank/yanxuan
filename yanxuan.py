@@ -21,15 +21,20 @@ class YanXuan:
 		self.soup = BeautifulSoup('', 'html.parser')
 		self.pyData = {}
 		self.result = {}
-		self.superCategory = {'居家': 1005000, '配件': 1008000, '服装': 1010000, '电器': 1043000, '洗护': 1013001, '饮食': 1005002, \
-							'餐厨': 1005001, '婴童': 1011000, '文体': 1019000, '特色区': 1065000}
-		self.search_CategoryList = []
-		self.search_ItemList = []
+		self.superCategory = {'居家': '1005000', '配件': '1008000', '服装': '1010000', '电器': '1043000',
+		                      '洗护': '1013001','饮食': '1005002', '餐厨': '1005001', '婴童': '1011000',
+							 '文体': '1019000', '特色区': '1065000'}
+
+		self.searchCategoryList = {}
+		self.searchItemList = {}
 
 	def set_payload(self, params):
 		self.payload.update(params)
 
-	def get_CategoryPydata(self):
+	def clear_payload(self):
+		self.payload.clear()
+
+	def get_category_pydata(self):
 		searchUrl = self.baseUrl
 		for key in self.payload:
 			searchUrl += (key + '='+self.payload[key]+'&')
@@ -45,10 +50,27 @@ class YanXuan:
 		# print(self.py_data)
 
 	def get_all_category_list(self):
-		main_url = 'http://you.163.com'
-		main_page = requests.get(main_url)
+		# main_url = 'http://you.163.com'
+		# main_page = requests.get(main_url)
+		for val in self.superCategory.values():
+			searchUrl = self.baseUrl + 'categoryId=' + val +'&timer=tc'
+			print(searchUrl)
+			searchPage = requests.get(searchUrl)
+			searchSoup = BeautifulSoup(searchPage.text, 'html.parser')
+			jsonData = searchSoup.find_all('script')[7].text[15:-2]
+			pyData = json.loads(jsonData)
 
-		pass
+			for cate in pyData['categoryItemList']:
+				print('*==='+cate['category']['name']+'===*')
+			# self.searchCategoryList.append((str(cate['category']['name']), cate['category']['id']))
+			# self.searchCategoryList.append({cate['category']['name']: cate['category']['id'], "itemIDList": []})
+				self.searchCategoryList[cate['category']['id']] = []
+				for item in cate['itemList']:
+					print(item['name'], item['id'])
+					self.searchCategoryList[cate['category']['id']].append(item['id'])
+			# print(cate['category']['name'])
+		print(self.searchCategoryList)
+
 
 	def get_search_category_list(self):
 		print(self.pyData.keys())
@@ -56,23 +78,27 @@ class YanXuan:
 		print(self.pyData['categoryItemList'][1].keys())
 		for cate in self.pyData['categoryItemList']:
 			print('*==='+cate['category']['name']+'===*')
-			self.search_CategoryList.append((str(cate['category']['name']), cate['category']['id']))
+			# self.searchCategoryList.append((str(cate['category']['name']), cate['category']['id']))
+			# self.searchCategoryList.append({cate['category']['name']: cate['category']['id'], "itemIDList": []})
+			self.searchCategoryList[cate['category']['id']] = []
 			for item in cate['itemList']:
 				print(item['name'], item['id'])
+				self.searchCategoryList[cate['category']['id']].append(item['id'])
 			# print(cate['category']['name'])
-		print(self.search_CategoryList)
+		print(self.searchCategoryList)
 		print(self.pyData['categoryItemList'][1]['category'])
 		# print(self.py_data['categoryItemList'][1]['itemList'])
-		print(self.pyData['categoryItemList'][0]['itemList'][3])
-		pass
+		# print(self.pyData['categoryItemList'][0]['itemList'][3])
+		# pass
 
-
-	def export_resualt(self):
+	def export_result(self):
 		pass
 
 
 if __name__ == '__main__':
 	yx = YanXuan()
-	yx.set_payload({'categoryId': '1005001', 'subCategoryId': '1005007', "timer":'tc'})
-	yx.get_CategoryPydata()
-	yx.get_search_category_list()
+	# yx.set_payload({'categoryId': '1005001', 'subCategoryId': '1005007', "timer": 'tc'})
+	# yx.get_category_pydata()
+	# yx.get_search_category_list()
+	yx.get_all_category_list()
+
