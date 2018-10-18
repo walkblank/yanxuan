@@ -2,6 +2,7 @@
 import requests
 from bs4 import BeautifulSoup
 import json
+from dataclasses import dataclass
 
 
 class YanXuanItem:
@@ -73,8 +74,10 @@ class YanXuan:
 					# print(type(price))
 					# print(type(item['name']))
 					# sellVolume = str(item['sellVolume'])
-					# file.writelines(item['name']+'#'+str(item['id'])+'#'+str(item['rank'])+'#'+price+'#' + sellVolume + '\n')
-					print(item['name'], '#', item['id'], '#', item['rank'], '#', item['sellVolume'], '#', item['counterPrice'])
+					# file.writelines(item['name']+'#'+str(item['id'])+'#'+str(item['rank'])+'#'+price+'#' + 
+					# sellVolume + '\n')
+					print(item['name'], '#', item['id'], '#', item['rank'], '#', item['sellVolume'], '#', \
+					item['counterPrice'])
 					self.searchCategoryList[cate['category']['id']].append(item['id'])
 			# print(cate['category']['name'])
 		print(self.searchCategoryList)
@@ -103,6 +106,41 @@ class YanXuan:
 
 	def export_result(self):
 		pass
+	
+	def get_test(self):
+		# main_url = 'http://you.163.com'
+		# main_page = requests.get(main_url)
+		# file = open('itemlist.txt', 'w+')
+		for val in self.superCategory.values():
+			searchUrl = self.baseUrl + 'categoryId=' + val +'&timer=tc'
+			print(searchUrl)
+			searchPage = requests.get(searchUrl)
+			searchSoup = BeautifulSoup(searchPage.text, 'html.parser')
+			jsonData = searchSoup.find_all('script')[7].text[15:-2]
+			pyData = json.loads(jsonData)
+
+			for cate in pyData['categoryItemList']:
+				print('*==='+cate['category']['name']+'===*')
+				# file.writelines(cate['category']['name'] + '\n')
+			# self.searchCategoryList.append((str(cate['category']['name']), cate['category']['id']))
+			# self.searchCategoryList.append({cate['category']['name']: cate['category']['id'], i
+			# "itemIDList": []})
+				self.searchCategoryList[cate['category']['id']] = []
+				for item in cate['itemList']:
+					# print(item['name'], item['id'])
+					# price = str(item['counterPrice'])
+					# print(type(price))
+					# print(type(item['name']))
+					# sellVolume = str(item['sellVolume'])
+					# file.writelines(item['name']+'#'+str(item['id'])+'#'+str(item['rank'])+'#'+price+'#'
+					#  + sellVolume + '\n')
+					print(item['name'], '#', item['id'], '#', item['rank'], '#', item['sellVolume'], '#', \
+					item['counterPrice'])
+					self.searchCategoryList[cate['category']['id']].append(item['id'])
+			# print(cate['category']['name'])
+		print(self.searchCategoryList)
+		# file.close()
+	
 
 
 if __name__ == '__main__':

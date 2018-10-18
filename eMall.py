@@ -13,6 +13,7 @@ class Item:
     description : str
     shopID: int
     vendorID: str
+    soldCount: int
     commentCount: int
     goodCommentCount: int
     generalCommentCount: int
@@ -25,15 +26,14 @@ class Category:
     name: str
     url : str
     cateID: str
-    itemList : List[Item] = field(default_factory=list)
+    itemList : List[Item] # = field(default_factory=list)
+    topItem : Item
 
     def addItem(self, item:Item) -> List[Item]:
-        # self.itemList += item
-        #TODO
-        self.itemList += item
+        self.itemList.append(item)
         # return self.itemList
     
 @dataclass 
 class EMall: 
     shopName: str
-    cateList: List[Category] = field(default_factory=list)
+    cateList: List[Category] # = field(default_factory=list)
