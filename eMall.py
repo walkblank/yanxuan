@@ -26,6 +26,7 @@ class Category:
     name: str
     url : str
     cateID: str
+    supperCate: str
     itemList : List[Item] # = field(default_factory=list)
     topItem : Item
 
@@ -36,4 +37,8 @@ class Category:
 @dataclass 
 class EMall: 
     shopName: str
-    cateList: List[Category] # = field(default_factory=list)
+    cateList: List[Category]  = field(default_factory=list)
+
+
+if __name__ == "__main__":
+    yxMall = EMall('yanxuan')

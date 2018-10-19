@@ -140,7 +140,20 @@ class YanXuan:
 			# print(cate['category']['name'])
 		print(self.searchCategoryList)
 		# file.close()
-	
+
+	def getAllCateList(self):
+		pageSrc = requests.get('http://you.163.com')
+		pageSoup = BeautifulSoup(pageSrc.text, 'html.parser')
+		# jsonData = pageSoup.find_all('script')[7].text[17:-1]
+		jsonData = pageSoup.find_all('script')[7].text[17:-1]
+		# print(jsonData)
+		# f = open('t.txt', 'w+')
+		# f.write(jsonData)
+		# f.close()
+		cateListData = json.loads(jsonData)
+		cateListJson = cateListData['cateList']
+		print(cateListJson[0]['name'])
+
 
 
 if __name__ == '__main__':
@@ -148,5 +161,6 @@ if __name__ == '__main__':
 	# yx.set_payload({'categoryId': '1005001', 'subCategoryId': '1005007', "timer": 'tc'})
 	# yx.get_category_pydata()
 	# yx.get_search_category_list()
-	yx.get_all_category_list()
+	# yx.get_all_category_list()
+	yx.getAllCateList()
 
