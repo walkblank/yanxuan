@@ -3,6 +3,7 @@ import requests
 from bs4 import BeautifulSoup
 import json
 from dataclasses import dataclass
+import xlwt
 
 
 class YanXuanItem:
@@ -22,9 +23,12 @@ class YanXuan:
 		self.soup = BeautifulSoup('', 'html.parser')
 		self.pyData = {}
 		self.result = {}
-		self.superCategory = {'居家': '1005000', '配件': '1008000', '服装': '1010000', '电器': '1043000',
-		                      '洗护': '1013001','饮食': '1005002', '餐厨': '1005001', '婴童': '1011000',
-							 '文体': '1019000', '特色区': '1065000'}
+		#self.superCategory = {'居家': '1005000', '配件': '1008000', '服装': '1010000', '电器': '1043000',
+		#                      '洗护': '1013001','饮食': '1005002', '餐厨': '1005001', '婴童': '1011000',
+		#					 '文体': '1019000', '特色区': '1065000'}
+		self.superCategory = {'居家': '1005000', '洗护': '1013001','餐厨': '1005001'}
+							 
+
 
 		self.searchCategoryList = {}
 		self.searchItemList = {}
@@ -54,6 +58,9 @@ class YanXuan:
 		# main_url = 'http://you.163.com'
 		# main_page = requests.get(main_url)
 		# file = open('itemlist.txt', 'w+')
+		book = xlwt.Workbook()
+		sheet = book.add_sheet('xxx')
+		writeRow = 0
 		for val in self.superCategory.values():
 			searchUrl = self.baseUrl + 'categoryId=' + val +'&timer=tc'
 			print(searchUrl)
@@ -63,7 +70,7 @@ class YanXuan:
 			pyData = json.loads(jsonData)
 
 			for cate in pyData['categoryItemList']:
-				print('*==='+cate['category']['name']+'===*')
+				# print('*==='+cate['category']['name']+'===*')
 				# file.writelines(cate['category']['name'] + '\n')
 			# self.searchCategoryList.append((str(cate['category']['name']), cate['category']['id']))
 			# self.searchCategoryList.append({cate['category']['name']: cate['category']['id'], "itemIDList": []})
@@ -77,10 +84,19 @@ class YanXuan:
 					# file.writelines(item['name']+'#'+str(item['id'])+'#'+str(item['rank'])+'#'+price+'#' + 
 					# sellVolume + '\n')
 					print(item['name'], '#', item['id'], '#', item['rank'], '#', item['sellVolume'], '#', \
-					item['counterPrice'])
+					item['counterPrice'] , item['sellVolume']*item['counterPrice'])
+					writeItem = [item['name'], item['id'], item['rank'], item['sellVolume'], item['counterPrice'],\
+					item['sellVolume']*item['counterPrice']]
+					col = 0
+					for wi in writeItem:
+						sheet.write(writeRow, col, wi)
+						col+=1
+					
 					self.searchCategoryList[cate['category']['id']].append(item['id'])
+					writeRow+=1
 			# print(cate['category']['name'])
-		print(self.searchCategoryList)
+			book.save('x.xls')
+		# print(self.searchCategoryList)
 		# file.close()
 
 
@@ -120,7 +136,7 @@ class YanXuan:
 			pyData = json.loads(jsonData)
 
 			for cate in pyData['categoryItemList']:
-				print('*==='+cate['category']['name']+'===*')
+				# print('*==='+cate['category']['name']+'===*')
 				# file.writelines(cate['category']['name'] + '\n')
 			# self.searchCategoryList.append((str(cate['category']['name']), cate['category']['id']))
 			# self.searchCategoryList.append({cate['category']['name']: cate['category']['id'], i
@@ -145,14 +161,17 @@ class YanXuan:
 		pageSrc = requests.get('http://you.163.com')
 		pageSoup = BeautifulSoup(pageSrc.text, 'html.parser')
 		# jsonData = pageSoup.find_all('script')[7].text[17:-1]
-		jsonData = pageSoup.find_all('script')[7].text[17:-1]
-		# print(jsonData)
-		# f = open('t.txt', 'w+')
-		# f.write(jsonData)
-		# f.close()
-		cateListData = json.loads(jsonData)
-		cateListJson = cateListData['cateList']
-		print(cateListJson[0]['name'])
+		jsonData = pageSoup.find_all('script')#[7].text[17:-1]
+		print(jsonData)
+		f = open('t.txt', 'w+')
+		f.write(str(jsonData))
+		f.close()
+		# cateListData = json.loads(jsonData)
+		# cateListJson = cateListData['cateList']
+		# print(cateListJson[0]['name'])
+	
+	def getItemListOfCate(self, item: str):
+		pass
 
 
 

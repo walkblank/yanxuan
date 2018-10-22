@@ -39,6 +39,11 @@ class EMall:
     shopName: str
     cateList: List[Category]  = field(default_factory=list)
 
+def TestClass(a: int) -> int:
+    return a*10
+    # return 'hello'
 
 if __name__ == "__main__":
-    yxMall = EMall('yanxuan')
+    # yxMall = EMall('yanxuan')
+    tc = TestClass(8)	
+    print(tc)
