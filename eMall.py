@@ -33,17 +33,19 @@ class Category:
     def addItem(self, item:Item) -> List[Item]:
         self.itemList.append(item)
         # return self.itemList
+
+    def exportToFile(self):
+        pass
     
 @dataclass 
 class EMall: 
     shopName: str
     cateList: List[Category]  = field(default_factory=list)
+    
+    def exportToFile(self):
+        pass
 
-def TestClass(a: int) -> int:
-    return a*10
-    # return 'hello'
 
 if __name__ == "__main__":
     # yxMall = EMall('yanxuan')
-    tc = TestClass(8)	
-    print(tc)
+    pass
