@@ -10,7 +10,7 @@ class YX(object):
     def __init__(self):
         print('yanxuan instant')
         
-    def getCateListOfMall(self) -> EMall:
+    def getEMall(self) -> EMall:
         yxMall = EMall('yanxuan')
         homePage = requests.get('http://you.163.com')
         if homePage.status_code:
@@ -32,4 +32,4 @@ class YX(object):
 
 if __name__  == "__main__":
     yx = YX()
-    yx.getCateListOfMall()
+    yx.getEMall()
