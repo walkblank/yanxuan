@@ -158,13 +158,13 @@ class YanXuan:
 		# file.close()
 
 	def getAllCateList(self):
-		pageSrc = requests.get('http://you.163.com')
+		pageSrc = requests.get('http://you.163.com/item/list?categoryId=1005000&subCategoryId=1008009&timer=tc')
 		pageSoup = BeautifulSoup(pageSrc.text, 'html.parser')
 		# jsonData = pageSoup.find_all('script')[7].text[17:-1]
-		jsonData = pageSoup.find_all('script')#[7].text[17:-1]
+		jsonData = pageSoup.find_all('script')[7].text[16:-2]
 		print(jsonData)
-		f = open('t.txt', 'w+')
-		f.write(str(jsonData))
+		f = open('t.txt', 'w+', encoding = 'gb18030')
+		f.write(jsonData)
 		f.close()
 		# cateListData = json.loads(jsonData)
 		# cateListJson = cateListData['cateList']

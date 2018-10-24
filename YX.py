@@ -9,7 +9,7 @@ from eMall import EMall, Category, Item
 class YX(object):
     def __init__(self):
         print('yanxuan instant')
-        
+
     def getEMall(self) -> EMall:
         yxMall = EMall('yanxuan')
         homePage = requests.get('http://you.163.com')
@@ -19,17 +19,19 @@ class YX(object):
         content = soup.find_all('script')[7].text
         jsonData = content[content.find('{'): -1]
         jsonDict = json.loads(jsonData)
-        cate = Category()
         for cate in jsonDict['cateList']:
-            yxMall.cateList 
+            for subCate in cate['subCateList']:
+                category = Category(name=subCate['name'], url='item/list?categoryId='+str(cate['id']), 
+                                    cateId=subCate['id'], superCateId=subCate['superCategoryId'],  
+                                    superCateName=cate['name'])
+                yxMall.cateList += [category]
 
         return yxMall
-        
 
     def getItemListOfCate(self, cate: Category):
-        pass
-        
+        pageSrc = requests.get('')
 
-if __name__  == "__main__":
+
+if __name__ == "__main__":
     yx = YX()
-    yx.getEMall()
+    print(yx.getEMall())

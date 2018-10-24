@@ -20,32 +20,42 @@ class Item:
     poorCommentCount: int
     favorDesc1: str
     favorDesc2: str
+    
+@dataclass 
+class SuperCategory:
+    superCateId: str
+    superCateName: str
+    url: str
+ 
 
 @dataclass
-class Category: 
+class Category(SuperCategory): 
     name: str
-    url : str
-    cateID: str
-    supperCate: str
-    itemList : List[Item] = field(default_factory=list)
+    # superCateName: str
+    # url : str
+    cateId: str
+    # superCateId: str
+    # itemList : List[Item] = field(default_factory=list)
     # topItem : Item
 
-    def addItem(self, item:Item):
-        self.itemList += item
+    # def addItem(self, item:Item):
+        # self.itemList += item
         # self.itemList.append(item)
         # return self.itemList
 
-    def exportToFile(self):
-        pass
+    # def exportToFile(self):
+        # pass
 
-    def update(self, dic: dict):
-        for key in dic.keys():
-            pass
-    
+    # def update(self, dic: dict):
+        # for key in dic.keys():
+            # pass
+
+  
 
 @dataclass 
 class EMall: 
     shopName: str
+    superCatList = List[SuperCategory] = field(default_factory=list)
     cateList: List[Category]  = field(default_factory=list)
     
     def exportToFile(self):
