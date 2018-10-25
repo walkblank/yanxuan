@@ -4,22 +4,23 @@ from typing import List
 
 @dataclass 
 class Item:
-    itemID : str
+    itemId : str
     url : str
     category: str
     name: str
     realPrice: int
-    orignalPrice: int
-    description : str
-    shopID: int
-    vendorID: str
+    originalPrice: int
     soldCount: int
-    commentCount: int
-    goodCommentCount: int
-    generalCommentCount: int
-    poorCommentCount: int
-    favorDesc1: str
-    favorDesc2: str
+
+    description : str = ''
+    shopID: int = 0
+    vendorID: str = ''
+    commentCount: int = 0
+    goodCommentCount: int = 0
+    generalCommentCount: int = 0
+    poorCommentCount: int = 0
+    favorDesc1: str = ''
+    favorDesc2: str = ''
     
 @dataclass 
 class SuperCategory:
@@ -55,7 +56,7 @@ class Category(SuperCategory):
 @dataclass 
 class EMall: 
     shopName: str
-    superCatList = List[SuperCategory] = field(default_factory=list)
+    superCateList : List[SuperCategory] = field(default_factory=list)
     cateList: List[Category]  = field(default_factory=list)
     
     def exportToFile(self):
