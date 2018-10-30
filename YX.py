@@ -1,9 +1,14 @@
 import requests
-import json, xlwt
+import json
+import xlwt
 from bs4 import BeautifulSoup
 from dataclasses import dataclass
 from eMall import EMall, Category, Item, SuperCategory
 from typing import List
+
+
+def getJsonContent(url: str):
+    pageSrc = requests.get(url)
 
 
 class YX(object):
@@ -12,9 +17,10 @@ class YX(object):
 
     def getEMall(self) -> EMall:
         yxMall = EMall('yanxuan')
-        homePage = requests.get('http://you.163.com')
+        homePage = requests.get('http://you.163.com/')
         if homePage.status_code:
             print(homePage.status_code)
+            print(homePage.text)
         soup = BeautifulSoup(homePage.text, 'html.parser')
         content = soup.find_all('script')[7].text
         jsonData = content[content.find('{'): -1]
@@ -32,7 +38,7 @@ class YX(object):
 
     def getItemListOfCate(self, cate: Category) -> List[Item]:
         itemList = []
-        url = 'http://you.163.com/' + cate.url
+        url = 'http://you.163.com/' + cate.url + '&timer=tc'
         print(url)
         print(cate.name)
         pageSrc = requests.get(url)
@@ -46,9 +52,9 @@ class YX(object):
                 for item in cateT['itemList']:
                     # TODO
                     it = Item(name=item['name'], itemId=item['id'], category=cateT['category']['name'],
-                              realPrice = item['retailPrice'], originalPrice = item['counterPrice'],
-                              soldCount = item['sellVolume'], url= 'www')
-                    # print(it)
+                              realPrice=item['retailPrice'], originalPrice=item['counterPrice'],
+                              soldCount=item['sellVolume'], url='www')
+                    print(it)
                     itemList += [it]
                     # pass
                 #
@@ -63,9 +69,28 @@ class YX(object):
 
 
 if __name__ == "__main__":
+    itemList = []
+    book = xlwt.Workbook()
+    sheet = book.add_sheet('sport')
+    writeRow = 0
     yx = YX()
     yxMall = yx.getEMall()
-    # print(yxMall)
-    yx.getItemListOfCate(yxMall.cateList[0])
-    yx.getItemListOfMall(False)
-    yx.getItemListOfMall()
+    # print(yxMall.superCateList)
+    # print(yxMall.cateList)
+    for i in yxMall.cateList:
+        if i.superCateName == '服装':
+            print(yxMall.cateList.index(i),i)
+    for i in range(38,44):
+        itemList += yx.getItemListOfCate(yxMall.cateList[i])
+    # yx.getItemListOfMall(False)
+    # yx.getItemListOfMall()
+    # for i in itemList:
+    #     writeItem = [i.itemId, i.name, i.originalPrice, i.realPrice, i.soldCount, i.realPrice*i.soldCount]
+    #     col = 0
+    #     for wi in writeItem:
+    #         sheet.write(writeRow, col, wi)
+    #         col+=1
+    #     writeRow += 1
+
+    # book.save('sport.xls')
+
