@@ -32,26 +32,7 @@ class SuperCategory:
 @dataclass
 class Category(SuperCategory): 
     name: str
-    # superCateName: str
-    # url : str
     cateId: str
-    # superCateId: str
-    # itemList : List[Item] = field(default_factory=list)
-    # topItem : Item
-
-    # def addItem(self, item:Item):
-        # self.itemList += item
-        # self.itemList.append(item)
-        # return self.itemList
-
-    # def exportToFile(self):
-        # pass
-
-    # def update(self, dic: dict):
-        # for key in dic.keys():
-            # pass
-
-  
 
 @dataclass 
 class EMall: 
@@ -65,4 +46,3 @@ class EMall:
 
 if __name__ == "__main__":
     yxMall = EMall('yanxuan')
-    # pass
