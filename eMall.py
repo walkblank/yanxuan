@@ -6,6 +6,7 @@ from typing import List
 class Item:
     itemId : str
     url : str
+    superCategory: str
     category: str
     name: str
     realPrice: int

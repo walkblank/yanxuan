@@ -1,4 +1,4 @@
-import requests, json, xlwt
+import requests, json, xlwt, datetime
 from bs4 import BeautifulSoup
 from dataclasses import dataclass
 from eMall import EMall, Category, Item, SuperCategory
@@ -53,7 +53,8 @@ class YX(object):
                     for item in cateT['itemList']:
                         it = Item(name=item['name'], itemId=item['id'], category=cateT['category']['name'],
                                   realPrice=item['retailPrice'], originalPrice=item['counterPrice'],
-                                  soldCount=item['sellVolume'], url='www')
+                                  soldCount=item['sellVolume'], url='www', 
+                                  superCategory=jsonDict['currentCategory']['name'])
                         # print(it)
                         itemList += [it]
         return itemList
@@ -73,26 +74,56 @@ class YX(object):
                 for item in cateT['itemList']:
                     it = Item(name=item['name'], itemId=item['id'], category=cateT['category']['name'],
                                   realPrice=item['retailPrice'], originalPrice=item['counterPrice'],
-                                  soldCount=item['sellVolume'], url='www')
+                                  soldCount=item['sellVolume'], url='www', 
+                                  superCategory = superCate.superCateName)
                     # print(it)
                     itemList += [it]
                 
         return itemList, cateList
 
     def getItemInfo(self, item: Item):
+        #TODO 
         pass
 
 
     def getItemListOfMall(self, export=True):
+        #TODO 
         if export:
             print('export')
-        # pass
+
+def writeListToSheetRow(sheet, list: [], row: int):
+    col = 0
+    for item in list:
+        sheet.write(row, col, item)
+        col += 1
+
+def itemListToXls(itemList: List[Item], fileName = '', sepSheet = False):
+    xlsBook = xlwt.Workbook()
+    CateSheetDict =  {}
+    writeItem = ['id', '名称', '品类', '原价', '售价', '销量', '销售额']
+    for i in itemList:
+        if i.superCategory not in CateSheetDict:
+            CateSheetDict[i.superCategory] = [xlsBook.add_sheet(i.superCategory), 0] 
+            writeListToSheetRow(CateSheetDict[i.superCategory][0], writeItem, 0)
+            CateSheetDict[i.superCategory][1] += 1
+        writeItem = [i.itemId, i.name, i.category, i.originalPrice, i.realPrice, 
+                     i.soldCount, i.realPrice*i.soldCount]
+        writeListToSheetRow(
+            CateSheetDict[i.superCategory][0], writeItem, CateSheetDict[i.superCategory][1])
+        CateSheetDict[i.superCategory][1]+=1
+    if fileName == '':
+        fileName = str(datetime.date.today())
+    xlsBook.save(fileName+'.xls')
+    print('文件已保存:'+ fileName+'.xls')
+
 
 def userInterfaceShell():
     itemList = []
     searchCateList = []
     yx= YX()
     yxmall = yx.getEMall()
+    print("______________")
+    print('以下是品类列表:')
     for i in yxmall.superCateList:
         print(yxmall.superCateList.index(i), i.superCateName)
     print('______________')
@@ -127,40 +158,5 @@ def userInterfaceShell():
             searchList += [searchCateList[int(i)]]
         print(searchList)
         itemList = yx.getItemListOfCate(searchList)
+    itemListToXls(itemList) 
 
-
-if __name__ == "__main__":
-    # itemList = []
-    # searchCateList = []
-    # book = xlwt.Workbook()
-    # sheet = book.add_sheet('sport')
-    # writeRow = 0
-    # yx = YX()
-    # yxMall = yx.getEMall()
-    # print(yxMall)
-    # print(yxMall.superCateList)
-    # print(yxMall.cateList)
-    # for i in yxMall.cateList:
-    #     if i.superCateName == '服装':
-    #         print(yxMall.cateList.index(i),i)
-    # for i in range(38,44):
-    #     searchCateList += [yxMall.cateList[i]]
-    # itemList = yx.getItemListOfCate(cateList = searchCateList)
-    # print(itemList)
-    # print(yxMall.superCateList[0])
-    # yx.getItemListOfSuperCate([yxMall.superCateList[0]])
-    # for i in yxMall.superCateList:
-    #     print(yxMall.superCateList.index(i),  i.superCateName)
-
-    userInterfaceShell()
-    while True:
-        print('______________')
-        print('搜索完成，是否继续搜索:')
-        print("0 继续")
-        print("1 退出")
-        print('______________')
-        select = input("请输入==>")
-        if select == '0':
-            userInterfaceShell()
-        if select == '1':
-            break
