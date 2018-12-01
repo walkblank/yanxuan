@@ -68,7 +68,8 @@ class YX(object):
                 # print(cateT['category'])
                 # print(superCate.superCateName)
                 category = Category(name=cateT['category']['name'],superCateName=superCate.superCateName,
-                                    cateId=cateT['category']['id'], superCateId=cateT['category']['superCategoryId'],
+                                    cateId=cateT['category']['id'], 
+                                    superCateId=cateT['category']['superCategoryId'],
                                     url='item/list?categoryId='+ str(superCate.superCateId))
                 cateList += [category]
                 for item in cateT['itemList']:
@@ -159,4 +160,3 @@ def userInterfaceShell():
         print(searchList)
         itemList = yx.getItemListOfCate(searchList)
     itemListToXls(itemList) 
-
