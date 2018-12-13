@@ -1,4 +1,4 @@
-from YX import userInterfaceShell
+from crazybee import userInterfaceShell
 
 def userInterfaceShellLoop():
     userInterfaceShell()

@@ -1,7 +1,7 @@
 import requests, json, xlwt, datetime
 from bs4 import BeautifulSoup
 from dataclasses import dataclass
-from eMall import EMall, Category, Item, SuperCategory
+from .eMall import EMall, Category, Item, SuperCategory
 from typing import List
 from retrying import retry #pip install retrying
 
@@ -18,8 +18,9 @@ def getPageContent(url:str) -> dict:
 
 
 class YX(object):
-    def __init__(self):
-        print('yanxuan instant')
+    # def __init__(self):
+    #     # print('yanxuan instant')
+    #     pass
 
     def getEMall(self) -> EMall:
         yxMall = EMall('yanxuan')
