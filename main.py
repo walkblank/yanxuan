@@ -1,5 +1,6 @@
 from crazybee import userInterfaceShell
 
+
 def userInterfaceShellLoop():
     userInterfaceShell()
     while True:
@@ -13,6 +14,7 @@ def userInterfaceShellLoop():
             userInterfaceShell()
         if select == '1':
             break
+
 
 if __name__ == '__main__':
     userInterfaceShellLoop()

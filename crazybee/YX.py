@@ -1,19 +1,27 @@
-import requests, json, xlwt, datetime
-from bs4 import BeautifulSoup
+import datetime
+import json
 from dataclasses import dataclass
-from .eMall import EMall, Category, Item, SuperCategory
 from typing import List
-from retrying import retry #pip install retrying
 
-@retry(stop_max_attempt_number = 5)
-def getPageContent(url:str) -> dict:
+import requests
+import xlwt
+from bs4 import BeautifulSoup
+from retrying import retry  # pip install retrying
+
+from .eMall import Category, EMall, Item, SuperCategory
+
+
+@retry(stop_max_attempt_number=1)
+def getPageContent(url: str) -> dict:
     pageSrc = requests.get(url)
-    # print(pageSrc.status_code)
+    print(pageSrc.status_code)
+    # print(pageSrc.text)
     soup = BeautifulSoup(pageSrc.text, 'html.parser')
-    content = soup.find_all('script')[7].text
-    #extract the real json struct data 
+    content = soup.find_all('script')[9].text
+    print(content);
+    # extract the real json struct data
     #find and rfind
-    jsonData = content[content.find('{') : content.rfind('}')+1]
+    jsonData = content[content.find('{'): content.rfind('}')+1]
     return json.loads(jsonData)
 
 
@@ -24,8 +32,8 @@ class YX(object):
 
     def getEMall(self) -> EMall:
         yxMall = EMall('yanxuan')
-        
-        jsonDict = getPageContent('http://you.163.com') 
+
+        jsonDict = getPageContent('http://you.163.com')
         for cate in jsonDict['cateList']:
             superCategory = SuperCategory(superCateName=cate['name'], superCateId=cate['id'],
                                           url='item/list?categoryId='+str(cate['id']))
@@ -46,15 +54,18 @@ class YX(object):
             cateNameSet.add(cate.name)
         print(urlSet)
         for i in urlSet:
-            url =  'http://you.163.com/'+ i + '&timer=tc' 
+            url = 'http://you.163.com/' + i + '&timer=tc'
             print(url)
             jsonDict = getPageContent(url)
             for cateT in jsonDict['categoryItemList']:
                 if cateT['category']['name'] in cateNameSet:
                     for item in cateT['itemList']:
+                        item['cPrice'] = 0
+                        if 'counterPrice' in item :
+                            item['cPrice'] = item['counterPrice']
                         it = Item(name=item['name'], itemId=item['id'], category=cateT['category']['name'],
-                                  realPrice=item['retailPrice'], originalPrice=item['counterPrice'],
-                                  soldCount=item['sellVolume'], url='www', 
+                                  realPrice=item['retailPrice'], originalPrice=item['cPrice'],
+                                  soldCount=item['sellVolume'], url='www',
                                   superCategory=jsonDict['currentCategory']['name'])
                         # print(it)
                         itemList += [it]
@@ -64,34 +75,38 @@ class YX(object):
         itemList = []
         cateList = []
         for superCate in superCateList:
-            jsonDict = getPageContent('http://you.163.com/'+superCate.url+'&timer=tc')
+            jsonDict = getPageContent(
+                'http://you.163.com/'+superCate.url+'&timer=tc')
             for cateT in jsonDict['categoryItemList']:
                 # print(cateT['category'])
                 # print(superCate.superCateName)
-                category = Category(name=cateT['category']['name'],superCateName=superCate.superCateName,
-                                    cateId=cateT['category']['id'], 
+                category = Category(name=cateT['category']['name'], superCateName=superCate.superCateName,
+                                    cateId=cateT['category']['id'],
                                     superCateId=cateT['category']['superCategoryId'],
-                                    url='item/list?categoryId='+ str(superCate.superCateId))
+                                    url='item/list?categoryId=' + str(superCate.superCateId))
                 cateList += [category]
                 for item in cateT['itemList']:
+                    item['cPrice'] = 0
+                    if 'counterPrice' in item:
+                        item['cPrice'] = item['counterPrice']
                     it = Item(name=item['name'], itemId=item['id'], category=cateT['category']['name'],
-                                  realPrice=item['retailPrice'], originalPrice=item['counterPrice'],
-                                  soldCount=item['sellVolume'], url='www', 
-                                  superCategory = superCate.superCateName)
+                              realPrice=item['retailPrice'], originalPrice=item['cPrice'],
+                              soldCount=item['sellVolume'], url='www',
+                              superCategory=superCate.superCateName)
                     # print(it)
                     itemList += [it]
-                
+
         return itemList, cateList
 
     def getItemInfo(self, item: Item):
-        #TODO 
+        # TODO
         pass
 
-
     def getItemListOfMall(self, export=True):
-        #TODO 
+        # TODO
         if export:
             print('export')
+
 
 def writeListToSheetRow(sheet, list: [], row: int):
     col = 0
@@ -99,30 +114,33 @@ def writeListToSheetRow(sheet, list: [], row: int):
         sheet.write(row, col, item)
         col += 1
 
-def itemListToXls(itemList: List[Item], fileName = '', sepSheet = False):
+
+def itemListToXls(itemList: List[Item], fileName='', sepSheet=False):
     xlsBook = xlwt.Workbook()
-    CateSheetDict =  {}
+    CateSheetDict = {}
     writeItem = ['id', '名称', '品类', '原价', '售价', '销量', '销售额']
     for i in itemList:
         if i.superCategory not in CateSheetDict:
-            CateSheetDict[i.superCategory] = [xlsBook.add_sheet(i.superCategory), 0] 
-            writeListToSheetRow(CateSheetDict[i.superCategory][0], writeItem, 0)
+            CateSheetDict[i.superCategory] = [
+                xlsBook.add_sheet(i.superCategory), 0]
+            writeListToSheetRow(
+                CateSheetDict[i.superCategory][0], writeItem, 0)
             CateSheetDict[i.superCategory][1] += 1
-        writeItem = [i.itemId, i.name, i.category, i.originalPrice, i.realPrice, 
+        writeItem = [i.itemId, i.name, i.category, i.originalPrice, i.realPrice,
                      i.soldCount, i.realPrice*i.soldCount]
         writeListToSheetRow(
             CateSheetDict[i.superCategory][0], writeItem, CateSheetDict[i.superCategory][1])
-        CateSheetDict[i.superCategory][1]+=1
+        CateSheetDict[i.superCategory][1] += 1
     if fileName == '':
         fileName = str(datetime.date.today())
     xlsBook.save(fileName+'.xls')
-    print('文件已保存:'+ fileName+'.xls')
+    print('文件已保存:' + fileName+'.xls')
 
 
 def userInterfaceShell():
     itemList = []
     searchCateList = []
-    yx= YX()
+    yx = YX()
     yxmall = yx.getEMall()
     print("______________")
     print('以下是品类列表:')
@@ -142,13 +160,13 @@ def userInterfaceShell():
 
     (itemList, searchCateList) = yx.getItemListOfSuperCate([selectSuperCate])
     if select == '1':
-        #TODO export itemList to excel file
+        # TODO export itemList to excel file
         # print(itemList)
         pass
     if select == '2':
         print('______________')
         print('子品类列表:')
-        for cate in  searchCateList:
+        for cate in searchCateList:
             print(searchCateList.index(cate), cate.name)
         print('______________')
         print('请选择想要搜索的子品类:')
@@ -160,4 +178,4 @@ def userInterfaceShell():
             searchList += [searchCateList[int(i)]]
         print(searchList)
         itemList = yx.getItemListOfCate(searchList)
-    itemListToXls(itemList) 
+    itemListToXls(itemList)
