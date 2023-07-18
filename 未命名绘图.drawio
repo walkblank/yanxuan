@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2023-07-18T02:03:06.608Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/115.0" etag="8dwRdcPCyLD_udTX8DVl" version="21.6.2" type="github">
+<mxfile host="app.diagrams.net" modified="2023-07-18T02:36:06.916Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/115.0" etag="FwCmUGEwGojlj9f6dWkt" version="21.6.2" type="github">
   <diagram name="Page-1" id="bfe91b75-5d2c-26a0-9c1d-138518896778">
     <mxGraphModel dx="1405" dy="885" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="850" background="none" math="0" shadow="0">
       <root>
@@ -56,12 +56,6 @@
             <mxPoint x="160" y="60" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="xPAk64RFmd2ETKGunmVE-24" value="" style="shape=flexArrow;endArrow=classic;startArrow=classic;html=1;rounded=0;" edge="1" parent="1" source="xPAk64RFmd2ETKGunmVE-1">
-          <mxGeometry width="100" height="100" relative="1" as="geometry">
-            <mxPoint x="220" y="330" as="sourcePoint" />
-            <mxPoint x="220" y="200" as="targetPoint" />
-          </mxGeometry>
-        </mxCell>
         <mxCell id="xPAk64RFmd2ETKGunmVE-32" value="&lt;div&gt;设备搜索与管理&lt;/div&gt;" style="whiteSpace=wrap;html=1;align=center;verticalAlign=middle;treeFolding=1;treeMoving=1;newEdgeStyle={&quot;edgeStyle&quot;:&quot;elbowEdgeStyle&quot;,&quot;startArrow&quot;:&quot;none&quot;,&quot;endArrow&quot;:&quot;none&quot;};flipH=1;" vertex="1" parent="1">
           <mxGeometry x="240" y="510" width="120" height="100" as="geometry" />
         </mxCell>
@@ -82,8 +76,43 @@
         <mxCell id="xPAk64RFmd2ETKGunmVE-51" value="&lt;div&gt;数据查询&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;" style="whiteSpace=wrap;html=1;align=center;verticalAlign=middle;treeFolding=1;treeMoving=1;newEdgeStyle={&quot;edgeStyle&quot;:&quot;elbowEdgeStyle&quot;,&quot;startArrow&quot;:&quot;none&quot;,&quot;endArrow&quot;:&quot;none&quot;};flipH=1;" vertex="1" parent="1">
           <mxGeometry x="640" y="510" width="120" height="100" as="geometry" />
         </mxCell>
+        <mxCell id="xPAk64RFmd2ETKGunmVE-56" style="edgeStyle=elbowEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;startArrow=none;endArrow=none;" edge="1" parent="1" source="xPAk64RFmd2ETKGunmVE-52">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="560" y="500" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
         <mxCell id="xPAk64RFmd2ETKGunmVE-52" value="&lt;div&gt;视频预览&lt;/div&gt;" style="whiteSpace=wrap;html=1;align=center;verticalAlign=middle;treeFolding=1;treeMoving=1;newEdgeStyle={&quot;edgeStyle&quot;:&quot;elbowEdgeStyle&quot;,&quot;startArrow&quot;:&quot;none&quot;,&quot;endArrow&quot;:&quot;none&quot;};flipH=1;" vertex="1" parent="1">
           <mxGeometry x="500" y="510" width="120" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="xPAk64RFmd2ETKGunmVE-53" value="" style="endArrow=classic;startArrow=classic;html=1;rounded=0;entryX=0.362;entryY=0.892;entryDx=0;entryDy=0;entryPerimeter=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;" edge="1" parent="1" source="xPAk64RFmd2ETKGunmVE-50" target="xPAk64RFmd2ETKGunmVE-1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="420" y="470" as="sourcePoint" />
+            <mxPoint x="470" y="420" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="xPAk64RFmd2ETKGunmVE-54" value="&lt;div&gt;TCP/HTTP&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="420" y="425" width="80" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="xPAk64RFmd2ETKGunmVE-55" value="" style="endArrow=classic;startArrow=classic;html=1;rounded=0;exitX=0.434;exitY=-0.032;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.54;entryY=0.735;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" target="xPAk64RFmd2ETKGunmVE-1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="558.7999999999998" y="509.99999999999994" as="sourcePoint" />
+            <mxPoint x="560.1199999999999" y="400" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="xPAk64RFmd2ETKGunmVE-57" value="RTSP" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="550" y="428" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="xPAk64RFmd2ETKGunmVE-59" value="" style="endArrow=classic;startArrow=classic;html=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="300" y="370" as="sourcePoint" />
+            <mxPoint x="190" y="180" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="xPAk64RFmd2ETKGunmVE-61" value="" style="endArrow=classic;startArrow=classic;html=1;rounded=0;entryX=0.737;entryY=0.775;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" target="xPAk64RFmd2ETKGunmVE-1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="701.1764705882351" y="510" as="sourcePoint" />
+            <mxPoint x="651.1764705882351" y="460" as="targetPoint" />
+          </mxGeometry>
         </mxCell>
       </root>
     </mxGraphModel>
